@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+%:
+	dh $@ --with dkms
+
+override_dh_clean:
+	if QUILT_PATCHES=patches quilt applied >/dev/null; then QUILT_PATCHES=patches quilt pop -a; fi
+	dh_clean
+
+override_dh_auto_install:
+	if QUILT_PATCHES=patches quilt unapplied >/dev/null; then QUILT_PATCHES=patches quilt push -a; fi
+
+override_dh_auto_configure:
+override_dh_auto_build:
+override_dh_auto_test:
+override_dh_auto_clean:

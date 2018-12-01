@@ -1,0 +1,4 @@
+obj-m += cdc_ether.o cdc_ncm.o cdc_mbim.o
+
+# prepend path with locally modified headers
+LINUXINCLUDE := -I$(M)/include $(LINUXINCLUDE)

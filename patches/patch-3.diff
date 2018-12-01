@@ -1,0 +1,127 @@
+From patchwork Sun Jul  1 09:05:53 2018
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Patchwork-Submitter: =?utf-8?q?Miguel_Rodr=C3=ADguez_P=C3=A9rez?=
+ <miguel@det.uvigo.gal>
+X-Patchwork-Id: 10498579
+Return-Path: <linux-usb-owner@kernel.org>
+Received: from mail.wl.linuxfoundation.org (pdx-wl-mail.web.codeaurora.org
+	[172.30.200.125])
+	by pdx-korg-patchwork.web.codeaurora.org (Postfix) with ESMTP id
+	4E469602D6 for <patchwork-linux-usb@patchwork.kernel.org>;
+	Sun,  1 Jul 2018 09:06:44 +0000 (UTC)
+Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
+	by mail.wl.linuxfoundation.org (Postfix) with ESMTP id 3EBC1285EE
+	for <patchwork-linux-usb@patchwork.kernel.org>;
+	Sun,  1 Jul 2018 09:06:44 +0000 (UTC)
+Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
+	id 3329128768; Sun,  1 Jul 2018 09:06:44 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
+	pdx-wl-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-7.8 required=2.0 tests=BAYES_00,DKIM_SIGNED,
+	MAILING_LIST_MULTI, RCVD_IN_DNSWL_HI,
+	T_DKIM_INVALID autolearn=ham version=3.3.1
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.wl.linuxfoundation.org (Postfix) with ESMTP id D5FB4285EE
+	for <patchwork-linux-usb@patchwork.kernel.org>;
+	Sun,  1 Jul 2018 09:06:43 +0000 (UTC)
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+	id S1752252AbeGAJGk (ORCPT
+	<rfc822;patchwork-linux-usb@patchwork.kernel.org>);
+	Sun, 1 Jul 2018 05:06:40 -0400
+Received: from mail-wr0-f195.google.com ([209.85.128.195]:47046 "EHLO
+	mail-wr0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752111AbeGAJG3 (ORCPT
+	<rfc822;linux-usb@vger.kernel.org>); Sun, 1 Jul 2018 05:06:29 -0400
+Received: by mail-wr0-f195.google.com with SMTP id s11-v6so3360308wra.13
+	for <linux-usb@vger.kernel.org>; Sun, 01 Jul 2018 02:06:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=det.uvigo.gal; s=clouddet;
+	h=from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding;
+	bh=znLhHzu+2f25VUkjYh6WZ4qB622yOOHPKXhAg8qVmlU=;
+	b=S7sPR/dhzqoprn7Fh/f6aK6lu5XEs/bVsjR+uiq6kb4UKfct7Vj5iph136nzRBStQT
+	RPMMG3CBYnYn+H7mhjhg6jGy//ta6KSvIDu15hkjgbuKyoCVjQc/PMM69yhUISJE5jU3
+	gU9lKLiXqawz7GhKSwNUIXbs3TU/7RRq3K/40=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references:mime-version:content-transfer-encoding;
+	bh=znLhHzu+2f25VUkjYh6WZ4qB622yOOHPKXhAg8qVmlU=;
+	b=oBU9hsN1DVh5Z7gGb1IVGA8cWzq1gOhSbhAsY8okcTZQhOKiTDHFNmomRpFwtTmNYd
+	u0tpq2Ue/rj+fnOTgACEUkl2FIL4215+NxegsnO8+yjWbJrojColkI7OAVp9GI6+wUkz
+	z1d+S5w1amqum9xYF014S1tswtPGyJJufHVLPRpQ9jTyZj2OMSgPDJwI67v30MQo+AkZ
+	FH3xvD7y9cgIQbWWQY41A6rzVLUtXVvPbv01TeUUBK3aA0nt4VxNSwAy8+FZ92l0+PgV
+	opQwOiqsZTSOh0zrBi4XysEBbi2O1HAb+wa3Y7c3fR0UIA6f/Mh+lhVLv+5tVy+gLlcm
+	KPHA==
+X-Gm-Message-State: APt69E2ED+VCe/JQTcrk1eAcyLiQbEDlU7Q/tQOYV92qDnOSo/GRcId/
+	0jKcbUgiTsvA77Qe2CGn/H7C9A==
+X-Google-Smtp-Source: 
+ AAOMgpcZUKR1Ey5nbzcVDk33EqjceKZL2gD456CDqs1+KdLWaVEPTSc1Erz7Mq7LePBoVST6p1H5Ww==
+X-Received: by 2002:adf:abf7:: with SMTP id
+	s110-v6mr17558334wrc.101.1530435988284;
+	Sun, 01 Jul 2018 02:06:28 -0700 (PDT)
+Received: from localhost.localdomain ([82.213.255.206])
+	by smtp.gmail.com with ESMTPSA id
+	t11-v6sm2832270wro.53.2018.07.01.02.06.26
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Sun, 01 Jul 2018 02:06:27 -0700 (PDT)
+From: =?UTF-8?q?Miguel=20Rodr=C3=ADguez=20P=C3=A9rez?=
+	<miguel@det.uvigo.gal>
+To: oliver@neukum.org, linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org, gregkh@linuxfoundation.org
+Cc: =?UTF-8?q?Miguel=20Rodr=C3=ADguez=20P=C3=A9rez?= <miguel@det.uvigo.gal>
+Subject: [PATCH v3 4/4] Hook into set_rx_mode to admit multicast traffic
+Date: Sun,  1 Jul 2018 11:05:53 +0200
+Message-Id: <20180701090553.7776-5-miguel@det.uvigo.gal>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20180701090553.7776-1-miguel@det.uvigo.gal>
+References: <20180701081550.GA7048@kroah.com>
+	<20180701090553.7776-1-miguel@det.uvigo.gal>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Sender: linux-usb-owner@vger.kernel.org
+Precedence: bulk
+List-ID: <linux-usb.vger.kernel.org>
+X-Mailing-List: linux-usb@vger.kernel.org
+X-Virus-Scanned: ClamAV using ClamSMTP
+
+We set set_rx_mode to usbnet_cdc_update_filter provided
+by cdc_ether that simply admits all multicast traffic
+if there is more than one multicast filter configured.
+
+Signed-off-by: Miguel Rodríguez Pérez <miguel@det.uvigo.gal>
+---
+ drivers/net/usb/cdc_ncm.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/net/usb/cdc_ncm.c b/drivers/net/usb/cdc_ncm.c
+index d6b51e2b9495..fda0af0b5d3c 100644
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -1652,6 +1652,7 @@ static const struct driver_info cdc_ncm_info = {
+ 	.status = cdc_ncm_status,
+ 	.rx_fixup = cdc_ncm_rx_fixup,
+ 	.tx_fixup = cdc_ncm_tx_fixup,
++	.set_rx_mode = usbnet_cdc_update_filter,
+ };
+ 
+ /* Same as cdc_ncm_info, but with FLAG_WWAN */
+@@ -1665,6 +1666,7 @@ static const struct driver_info wwan_info = {
+ 	.status = cdc_ncm_status,
+ 	.rx_fixup = cdc_ncm_rx_fixup,
+ 	.tx_fixup = cdc_ncm_tx_fixup,
++	.set_rx_mode = usbnet_cdc_update_filter,
+ };
+ 
+ /* Same as wwan_info, but with FLAG_NOARP  */
+@@ -1678,6 +1680,7 @@ static const struct driver_info wwan_noarp_info = {
+ 	.status = cdc_ncm_status,
+ 	.rx_fixup = cdc_ncm_rx_fixup,
+ 	.tx_fixup = cdc_ncm_tx_fixup,
++	.set_rx_mode = usbnet_cdc_update_filter,
+ };
+ 
+ static const struct usb_device_id cdc_devs[] = {

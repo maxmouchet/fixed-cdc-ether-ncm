@@ -1,0 +1,14 @@
+Source: fixed-cdc-ether-ncm
+Section: kernel
+Priority: optional
+Maintainer: Stefan Bühler <stbuehler@web.de>
+Build-Depends:
+ debhelper (>= 11),
+ dkms,
+Standards-Version: 4.1.3
+
+Package: fixed-cdc-ether-ncm-dkms
+Architecture: any
+Depends: ${misc:Depends}
+Description: Patched cdc-ether and cdc-ncm modules
+ DKMS package to build updated cdc-ether and cdc-ncm modules.

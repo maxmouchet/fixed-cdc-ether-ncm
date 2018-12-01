@@ -1,0 +1,131 @@
+From patchwork Sun Jul  1 09:05:52 2018
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Patchwork-Submitter: =?utf-8?q?Miguel_Rodr=C3=ADguez_P=C3=A9rez?=
+ <miguel@det.uvigo.gal>
+X-Patchwork-Id: 10498577
+Return-Path: <linux-usb-owner@kernel.org>
+Received: from mail.wl.linuxfoundation.org (pdx-wl-mail.web.codeaurora.org
+	[172.30.200.125])
+	by pdx-korg-patchwork.web.codeaurora.org (Postfix) with ESMTP id
+	D5FC060284 for <patchwork-linux-usb@patchwork.kernel.org>;
+	Sun,  1 Jul 2018 09:06:39 +0000 (UTC)
+Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
+	by mail.wl.linuxfoundation.org (Postfix) with ESMTP id C3C6628763
+	for <patchwork-linux-usb@patchwork.kernel.org>;
+	Sun,  1 Jul 2018 09:06:39 +0000 (UTC)
+Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
+	id B5DA628768; Sun,  1 Jul 2018 09:06:39 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
+	pdx-wl-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-7.8 required=2.0 tests=BAYES_00,DKIM_SIGNED,
+	MAILING_LIST_MULTI, RCVD_IN_DNSWL_HI,
+	T_DKIM_INVALID autolearn=ham version=3.3.1
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.wl.linuxfoundation.org (Postfix) with ESMTP id 637A328763
+	for <patchwork-linux-usb@patchwork.kernel.org>;
+	Sun,  1 Jul 2018 09:06:39 +0000 (UTC)
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+	id S1752209AbeGAJGc (ORCPT
+	<rfc822;patchwork-linux-usb@patchwork.kernel.org>);
+	Sun, 1 Jul 2018 05:06:32 -0400
+Received: from mail-wr0-f196.google.com ([209.85.128.196]:32773 "EHLO
+	mail-wr0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751890AbeGAJG1 (ORCPT
+	<rfc822;linux-usb@vger.kernel.org>); Sun, 1 Jul 2018 05:06:27 -0400
+Received: by mail-wr0-f196.google.com with SMTP id k7-v6so9107309wrq.0
+	for <linux-usb@vger.kernel.org>; Sun, 01 Jul 2018 02:06:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=det.uvigo.gal; s=clouddet;
+	h=from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding;
+	bh=ptZJMc1dUrMJkOiJjnEci00YmzaIC3QTa/v8dnqXyew=;
+	b=Tx8gQ0zjVf1fuJETAUztBouMYtLYp1BHnVL8pVdfMpwJKagr/Le/U9U51YZHsYodan
+	ajCCDVMVwp8httYqKM+Y/2jLgFbAgPgUgSI358KDSydrPeRWREaR3UB7JWkpOlin/bNF
+	S042gUv8iHD1qRifBzmgWBHRgFg53lpIJjYvs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20161025;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references:mime-version:content-transfer-encoding;
+	bh=ptZJMc1dUrMJkOiJjnEci00YmzaIC3QTa/v8dnqXyew=;
+	b=XsvzaZfiVSyNgBOua1KDIOL9b6BbfTt9PiC9e6LVfUeLTeMxXfTJqKCmE+KgiQ2Q6k
+	jQZLv021NMiHFcUUe4ABacO7ppkd9x7EBi8M4LwxXptNV9ieEpeiejo4DqMeSppUhxMd
+	+9Fqt6YP/f6473+9VeZSRwsDmSOVFtmyLACQTSNBtpjo5SPKxCi/iqd63eQCAe+5E0+T
+	zbDLIFJohC4nxFGFTx/oJFGyBm37Y6YG6rKgXIfq3oKDiQooO+wldI/J7fCyxgFcycjA
+	mXq8ikRgfrCMEVmcWVS+TuoSA+rQJluB8fjgfkxzKugOekWsP9bf3mUFyVIysHRn7uN9
+	pZAg==
+X-Gm-Message-State: APt69E3/jDt55sQh0HUPYZx9pcgH7Rmje5Iicbcsy9YH2RRuKoq9YzKp
+	HUoOETpC7js3+wvqIQOc5j2iA/ko66U=
+X-Google-Smtp-Source: 
+ AAOMgpfQD1Wso7oBTihbab+zTIXicTmLlDt8Vz7FlIyNO+5g4Zxim6yAugXyBUTGdrUI3WT9alDEvQ==
+X-Received: by 2002:adf:f90d:: with SMTP id
+	b13-v6mr16245874wrr.38.1530435985909;
+	Sun, 01 Jul 2018 02:06:25 -0700 (PDT)
+Received: from localhost.localdomain ([82.213.255.206])
+	by smtp.gmail.com with ESMTPSA id
+	t11-v6sm2832270wro.53.2018.07.01.02.06.24
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Sun, 01 Jul 2018 02:06:25 -0700 (PDT)
+From: =?UTF-8?q?Miguel=20Rodr=C3=ADguez=20P=C3=A9rez?=
+	<miguel@det.uvigo.gal>
+To: oliver@neukum.org, linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org, gregkh@linuxfoundation.org
+Cc: =?UTF-8?q?Miguel=20Rodr=C3=ADguez=20P=C3=A9rez?= <miguel@det.uvigo.gal>
+Subject: [PATCH v3 3/4] Replace the way cdc_ncm hooks into usbnet_change_mtu
+Date: Sun,  1 Jul 2018 11:05:52 +0200
+Message-Id: <20180701090553.7776-4-miguel@det.uvigo.gal>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20180701090553.7776-1-miguel@det.uvigo.gal>
+References: <20180701081550.GA7048@kroah.com>
+	<20180701090553.7776-1-miguel@det.uvigo.gal>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Sender: linux-usb-owner@vger.kernel.org
+Precedence: bulk
+List-ID: <linux-usb.vger.kernel.org>
+X-Mailing-List: linux-usb@vger.kernel.org
+X-Virus-Scanned: ClamAV using ClamSMTP
+
+Previously cdc_ncm overwrited netdev_ops used by usbnet
+thus preventing hooking into set_rx_mode. This patch
+preserves usbnet hooks into netdev_ops, and add an
+additional one for change_mtu needed by cdc_ncm.
+
+Signed-off-by: Miguel Rodríguez Pérez <miguel@det.uvigo.gal>
+---
+ drivers/net/usb/cdc_ncm.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/net/usb/cdc_ncm.c b/drivers/net/usb/cdc_ncm.c
+index 9e1b74590682..d6b51e2b9495 100644
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -750,16 +750,7 @@ int cdc_ncm_change_mtu(struct net_device *net, int new_mtu)
+ }
+ EXPORT_SYMBOL_GPL(cdc_ncm_change_mtu);
+ 
+-static const struct net_device_ops cdc_ncm_netdev_ops = {
+-	.ndo_open	     = usbnet_open,
+-	.ndo_stop	     = usbnet_stop,
+-	.ndo_start_xmit	     = usbnet_start_xmit,
+-	.ndo_tx_timeout	     = usbnet_tx_timeout,
+-	.ndo_get_stats64     = usbnet_get_stats64,
+-	.ndo_change_mtu	     = cdc_ncm_change_mtu,
+-	.ndo_set_mac_address = eth_mac_addr,
+-	.ndo_validate_addr   = eth_validate_addr,
+-};
++static struct net_device_ops cdc_ncm_netdev_ops;
+ 
+ int cdc_ncm_bind_common(struct usbnet *dev, struct usb_interface *intf, u8 data_altsetting, int drvflags)
+ {
+@@ -939,6 +930,8 @@ int cdc_ncm_bind_common(struct usbnet *dev, struct usb_interface *intf, u8 data_
+ 	dev->net->sysfs_groups[0] = &cdc_ncm_sysfs_attr_group;
+ 
+ 	/* must handle MTU changes */
++	cdc_ncm_netdev_ops = *dev->net->netdev_ops;
++	cdc_ncm_netdev_ops.ndo_change_mtu = cdc_ncm_change_mtu;
+ 	dev->net->netdev_ops = &cdc_ncm_netdev_ops;
+ 	dev->net->max_mtu = cdc_ncm_max_dgram_size(dev) - cdc_ncm_eth_hlen(dev);
+ 
