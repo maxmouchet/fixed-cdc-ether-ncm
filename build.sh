@@ -4,10 +4,10 @@ set -e
 
 cd "$(dirname "$(readlink -f "$0")")"
 
-if quilt unapplied >/dev/null; then
-	# just to be sure the path is good
-	export QUILT_PATCHES=patches
+# just to be sure the path is good
+export QUILT_PATCHES=patches
 
+if quilt unapplied >/dev/null; then
 	quilt push -a
 fi
 

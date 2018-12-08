@@ -1,0 +1,70 @@
+From 3e8a679910bf219bee8bb9633d3466199ea4119b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Miguel=20Rodr=C3=ADguez=20P=C3=A9rez?=
+ <miguel@det.uvigo.gal>
+Date: Sun, 1 Jul 2018 11:05:53 +0200
+Subject: [PATCH 3/3] net: cdc_ncm: hook into set_rx_mode to admit multicast
+ traffic
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Use usbnet_cdc_update_filter from cdc_ether to admit all multicast
+traffic if there is more than one multicast filter configured.
+
+Signed-off-by: Miguel Rodríguez Pérez <miguel@det.uvigo.gal>
+---
+ drivers/net/usb/cdc_ncm.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/net/usb/cdc_ncm.c b/drivers/net/usb/cdc_ncm.c
+index 50c05d0f44cb..8583d06eac48 100644
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -755,6 +755,7 @@ static const struct net_device_ops cdc_ncm_netdev_ops = {
+ 	.ndo_stop	     = usbnet_stop,
+ 	.ndo_start_xmit	     = usbnet_start_xmit,
+ 	.ndo_tx_timeout	     = usbnet_tx_timeout,
++	.ndo_set_rx_mode     = usbnet_set_rx_mode,
+ 	.ndo_get_stats64     = usbnet_get_stats64,
+ 	.ndo_change_mtu	     = cdc_ncm_change_mtu,
+ 	.ndo_set_mac_address = eth_mac_addr,
+@@ -1644,6 +1645,12 @@ static void cdc_ncm_status(struct usbnet *dev, struct urb *urb)
+ 	}
+ }
+ 
++/* the control interface is always the probed one */
++static void usbnet_cdc_ncm_update_filter(struct usbnet *dev)
++{
++	usbnet_cdc_update_filter(dev, dev->intf);
++}
++
+ static const struct driver_info cdc_ncm_info = {
+ 	.description = "CDC NCM",
+ 	.flags = FLAG_POINTTOPOINT | FLAG_NO_SETINT | FLAG_MULTI_PACKET
+@@ -1654,6 +1661,7 @@ static const struct driver_info cdc_ncm_info = {
+ 	.status = cdc_ncm_status,
+ 	.rx_fixup = cdc_ncm_rx_fixup,
+ 	.tx_fixup = cdc_ncm_tx_fixup,
++	.set_rx_mode = usbnet_cdc_ncm_update_filter,
+ };
+ 
+ /* Same as cdc_ncm_info, but with FLAG_WWAN */
+@@ -1667,6 +1675,7 @@ static const struct driver_info wwan_info = {
+ 	.status = cdc_ncm_status,
+ 	.rx_fixup = cdc_ncm_rx_fixup,
+ 	.tx_fixup = cdc_ncm_tx_fixup,
++	.set_rx_mode = usbnet_cdc_ncm_update_filter,
+ };
+ 
+ /* Same as wwan_info, but with FLAG_NOARP  */
+@@ -1680,6 +1689,7 @@ static const struct driver_info wwan_noarp_info = {
+ 	.status = cdc_ncm_status,
+ 	.rx_fixup = cdc_ncm_rx_fixup,
+ 	.tx_fixup = cdc_ncm_tx_fixup,
++	.set_rx_mode = usbnet_cdc_ncm_update_filter,
+ };
+ 
+ static const struct usb_device_id cdc_devs[] = {
+-- 
+2.19.2
+
