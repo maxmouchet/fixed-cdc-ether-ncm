@@ -1,6 +1,7 @@
 .pc
 .tmp_versions
 *.cmd
+*.mod
 *.mod.c
 *.mod.o
 *.ko
