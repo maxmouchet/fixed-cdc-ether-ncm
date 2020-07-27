@@ -1,4 +1,13 @@
-# Debian based dists + DKMS
+## Fedora
+
+```bash
+make -C /lib/modules/`uname -r`/build M=`pwd` modules
+sudo make -C /lib/modules/`uname -r`/build M=`pwd` modules_install
+sudo rmmod cdc_mbim cdc_wdm cdc_ncm
+sudo modprobe cdc_mbim cdc_wdm cdc_ncm
+```
+
+## Debian based dists + DKMS
 
 `debuild` should result in a
 `../fixed-cdc-ether-ncm-dkms_0.1_amd64.deb`, which you can install with
@@ -9,7 +18,7 @@ Reload the modules in question with:
 	rmmod cdc_mbim cdc_wdm cdc_ncm
 	modprobe cdc_mbim cdc_wdm cdc_ncm
 
-# Source
+## Source
 
 Build fixed `cdc_ether` and `cdc_ncm` modules for current kernel after
 applying patches with quilt:
